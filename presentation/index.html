@@ -157,7 +157,7 @@ layout: false
 ---
 class: center, middle
 ## New to frameworks?
-Skip this part if you're already familiar with frameworks
+
 
 ---
 .left-column[
@@ -178,6 +178,9 @@ Skip this part if you're already familiar with frameworks
 - Command line tools or background tasks
 - ..plus a lot of goodies, resources and tools making your day better!
 
+Now let's move on and see a simple example of Classic PHP vs MVC framework that 
+should provide enough to get started.
+
 .footnote[New to PHP? Well.. [stick with it](http://www.w3schools.com/php/) for a while! :-)]
 ]
 
@@ -189,7 +192,7 @@ Skip this part if you're already familiar with frameworks
   ### - Classic PHP
 ]
 .right-column[
-```xml
+```php
 <?php
 
 # File: sign-up.php
@@ -200,7 +203,7 @@ require('inc/config.php');
 
 $errors=array();
 if (isset($_POST['form_sent'])) {
-  // Form validation + database query to save user
+  // Manual form validation + SQL query to save user
 }
 
 ?>
@@ -232,7 +235,40 @@ if (isset($_POST['form_sent'])) {
   ### - MVC framework
 ]
 .right-column[
-TBD
+
+```php
+# File: views/layouts/main.php
+// Contains header and footer and in the middle 
+// places the content of the current page
+
+# File: views/user/signUp.php
+// HTML of current page with the form
+
+# File: forms/SignUpForm.php
+// Define form fields and validation rules
+
+# File: models/User.php
+// Work with user table in OOP without writing SQL
+
+# File: controllers/UserController.php
+
+public function actionSignUp() {
+  $signUpForm = new SignUpForm(); // form object
+  if (isset($_POST['SignUpForm'])) { // check form is sent
+    $signUpForm->attributes = $_POST['SignUpForm'];
+    if ($signUpForm->validate()) {
+      // Create new user, assign fields and save it
+      $user = new User();
+      $user->name=$signUpForm->name;
+      ...
+      $user->save();
+      // Refresh/redirect?
+    }
+  }
+  // Render the signUp view and pass the form object to it
+  $this->render('signUp', array('signUpForm'=>$signUpForm);
+}
+```
 ]
 
 ---
