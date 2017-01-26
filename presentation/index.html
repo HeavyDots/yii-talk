@@ -1090,7 +1090,31 @@ layout: false
 
 ## Internationalization
 
-TBD
+Enable multiple languages:  
+
+```php
+// In protected/config/main.php
+'sourceLanguage'=>'en',
+'language'=>'es',
+// Then in controller change as required
+Yii::app()->language='it';
+```
+
+Translate strings:  
+
+```php
+Yii::t('main', 'The user "{username}" does not exist.',
+    array('{username}'=>$username));
+// translations is saved in arrays
+// protected/messages/es/main.php
+'The user "{username}" does not exist.'=>'El usuario "{username}" no existe.',
+// protected/messages/en/main.php
+// protected/messages/it/main.php
+```
+
+Massively extract and manage translatios using `yiic message` tool.
+
+Localization can also be done for [Date, Time and Numbers](http://www.yiiframework.com/doc/guide/1.1/es/topics.i18n#date-and-time-formatting).
 
 ]
 
@@ -1103,7 +1127,29 @@ layout: false
 
 ## Command line tools
 
-TBD
+You can use existing command line tools or create your own.
+
+Go to your project's `protected` folder and run `yiic`:
+
+```
+-bash-4.2$ php yiic.php
+Yii command runner (based on Yii v1.1.16)
+Usage: yiic.php <command-name> [parameters...]
+
+The following commands are available:
+
+ - message
+ - migrate
+ - shell
+ - webapp
+
+To see individual command help, use the following:
+   yiic.php help <command-name>  
+```
+
+Example of [creating a new custom command](http://www.yiiframework.com/doc/guide/1.1/en/topics.console#creating-commands):  
+
+`protected/commands/EmailSenderCommand.php`
 
 ]
 
@@ -1116,9 +1162,30 @@ layout: false
 
 ## Debugging
 
+```php
+// php
+print_r();
+var_dump();
+die();
+// yii
+CVarDumper::dump($var,$depth=10,$highlight=false);
+Yii::app()->end();
+```
+
 ## Logging
 
-TBD
+```php
+// logging a message of type: 
+// trace, warning, error, info, profile
+Yii::log($msg,$level=CLogger::LEVEL_INFO,$category);
+// by default logs are written to 
+// protected/runtime/application.log
+
+// logging behavior can be adjusted from the log component 
+// in the config file, and you can define multiple log 
+// routes such as file, db, email
+// and configure what levels and categories to log
+```
 
 ]
 
