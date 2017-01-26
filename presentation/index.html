@@ -586,7 +586,7 @@ protected/      protected application files
 Faster way to create one is with [Gii](http://www.yiiframework.com/doc/guide/1.1/en/topics.gii) code generation tool.
 Once created simply add it to your config file:  
 
-```
+```php
 return array(
     ......
     'modules'=>array('my_new_module',...),
@@ -620,7 +620,7 @@ Basically you can put almost all the configurations in the `main.php` but often 
 
 - Split into multiple configuration files for better management. Example including separate config file from `main.php`:  
 
-```
+```php
 'db'=>require(dirname(__FILE__).'/database.php'),
 ```
 
@@ -628,7 +628,7 @@ Basically you can put almost all the configurations in the `main.php` but often 
 - Create custom config files excluded from version control that will allow each environment different configurations.
 - Merge configuration files:  
 
-```
+```php
 if (file_exists(dirname(__FILE__) . '/custom.params.php')) {
   $params = CMap::mergeArray($params, require(dirname(__FILE__) . '/custom.params.php'));
 }
@@ -649,7 +649,31 @@ Learn more details about everything that can be configured in [this wiki](http:/
   ### - Controllers and actions
 ]
 .right-column[
-TBD
+
+Simply create your controllers as the following example:  
+
+```php
+class SiteController extends CController
+{
+    public function actionIndex()
+    {
+        // ...
+    }
+ 
+    public function actionContact()
+    {
+        // ...
+    }
+}
+```
+
+And then you'll be able to access each of the actions like this:  
+
+```
+http://hostname/index.php?r=site/index
+http://hostname/index.php?r=site/contact
+```
+
 ]
 
 
@@ -660,7 +684,34 @@ TBD
   ### - URL management
 ]
 .right-column[
-TBD
+
+```php
+// From controller
+$this->createUrl($route,$params);
+$this->createUrl('site/contact',array(
+  'department'=>'support'
+));
+// From anywhere
+Yii::app()->createUrl($route,$params);
+// Absolute
+Yii::app()->createAbsoluteUrl($route,$params);
+// Create link from view (single array)
+CHtml::link('Edit post', array('/post/edit','id'=>$post->id));
+// Other way to create url from view
+$url=CHtml::normalizeUrl(array('/post/edit','id'=>$post->id));
+```
+
+You can use this [Yii-JSUrlManager](https://github.com/ains/Yii-JSUrlManager) extension and then run from JS: `Yii.app.createUrl('site/contact',{'department':'support'});`
+
+To achieve [friendly URLs](http://www.yiiframework.com/doc/guide/1.1/en/topics.url#user-friendly-urls) and more go to `urlManager` config section and adjust how you want your urls to behave and define all the url rules/patterns. 
+
+```php
+'rules'=>array(
+  // the url you want => module/controller/action
+  'get-in-touch'=>'site/contact',
+),
+```
+
 ]
 
 
@@ -672,7 +723,32 @@ TBD
   ### - Filters
 ]
 .right-column[
-TBD
+- Executed before and/or after a controller action executes
+- For example, the [access control filter](http://www.yiiframework.com/doc/guide/1.1/en/topics.auth#access-control-filter)
+- Can be defined
+  - As methods of the controller
+  - As individual classes
+  
+Example of filter and activating it in the controller: 
+
+```php
+File: ApiController.php
+...
+public function filters() {
+  return array(
+      'userAgent',
+  );
+}
+...
+public function filterUserAgent($filterChain) {
+  $userAgent=Yii::app()->request->userAgent;
+  if (empty($userAgent)) {
+    throw new CHttpException(403, 'No User-Agent provided');
+  }
+  $filterChain->run();
+}
+```
+
 ]
 
 
@@ -685,7 +761,36 @@ TBD
   ### - Query and Post params
 ]
 .right-column[
-TBD
+
+There are many ways you can access `$_GET` and `$_POST` data, let's see some:  
+
+```php
+
+// Plain old not-so-safe ways
+$page=$_GET['page'];
+$email=$_POST['email'];
+
+// Yii way
+
+// Get query
+Yii::app()->request->getQuery('param_name');
+// Get post
+Yii::app()->request->getPost('param_name');
+// Get or post
+Yii::app()->request->getParam('param_name');
+
+// Action Parameter Binding
+
+class PostController extends CController
+{
+  public function actionCreate($category, $language='en')
+  {
+    // ...
+  }
+}
+
+```
+
 ]
 
 ---
