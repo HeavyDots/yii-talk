@@ -974,7 +974,23 @@ The generator tool can also be customized, templated, and extended.
   ### - What's a widget?
 ]
 .right-column[
-TBD
+
+Widgets are small components of your application that are mainly used from views.
+
+The most direct example could be the [CMenu](http://www.yiiframework.com/doc/api/1.1/CMenu/) widget that allows you to 
+insert a navigation menu in your application by providing an array of items in the 
+menu. All the logic of detecting active item, generating all html, and so on would 
+be taken care from the widget.
+
+```php
+// Running a widget from a view
+<?php $this->beginWidget('path.to.WidgetClass'); ?>
+...body content that may be captured by the widget...
+<?php $this->endWidget(); ?>
+// or
+<?php $this->widget('path.to.WidgetClass'); ?>
+```
+
 ]
 
 
@@ -985,7 +1001,11 @@ TBD
   ### - Example of widgets
 ]
 .right-column[
-TBD
+
+- Paginator, Grid, ActiveForm, Menu, Breadcrumbs
+- Yii comes with most of jQuery UI components already defined as widgets: Autocomplete, Accordion, Dialog, Datepicker and so on
+- Make your own!
+
 ]
 
 
@@ -997,7 +1017,34 @@ TBD
   ### - Creating widgets
 ]
 .right-column[
-TBD
+
+Create your new widget and its view:
+
+```php
+// File: protected/widgets/MyWidget.php
+<?php
+class MyWidget extends CWidget
+{
+  public $number=0;
+    public function run()
+    {
+        // this method is called by CController::endWidget()
+        $var=1+$this->number;
+        $this->render('myWidget', array('var'=>$var));
+    }
+}
+// File: protected/widgets/views/myWidget.php
+<?php
+echo $var;
+```
+
+Now call it from somewhere in your app:  
+
+```php
+<?php $this->widget('application.widgets.MyWidget', 
+  array('number'=>2)); ?>
+```
+
 ]
 
 
