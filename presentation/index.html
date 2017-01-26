@@ -799,7 +799,37 @@ class PostController extends CController
   ### - Views
 ]
 .right-column[
-TBD
+
+Views are the presentation / HTML part of your application.
+
+```php
+// Parts that are common for the whole app 
+protected/views/layouts/main.php
+// The view for the contact form action
+protected/views/site/contact.php
+// Partial view to be included in contact.php
+// after sending the form
+protected/views/site/_thanks.php
+```
+
+Rendering views:  
+
+```php
+// Layouts are automatically rendered because
+// normal controller/action views extend from them
+
+
+// Rendering a view from controller
+File: SiteController.php
+public function actionContact() {
+  $this->render('contact', $params);
+}
+
+// Partial views don't extend the layout 
+// and are called like this
+$this->renderPartial('_thanks.php', $params);
+```
+
 ]
 
 
@@ -810,7 +840,24 @@ TBD
   ### - Themes
 ]
 .right-column[
-TBD
+
+Yii supports multiple visual themes for your application.
+
+To create a theme simply create the folder and place the views inside 
+as you are working with the normal `protected/views` directory:  
+
+`webroot/themes/my_new_theme`  
+
+To use it set it in your config file: 
+```php
+  'theme'=>'my_new_theme',
+```
+
+Your theme can even be empty, because views have fallback to the main views 
+directory of the application.
+
+More on theming in [the guide](http://www.yiiframework.com/doc/guide/1.1/en/topics.theming).
+
 ]
 
 
@@ -822,7 +869,33 @@ TBD
   ### - Assets and scripts
 ]
 .right-column[
-TBD
+
+Loading assets and registering scripts:  
+
+```php
+// Using client script manager
+$clientScript=Yii::app()->clientScript;
+// Register css / js files
+$clientScript->registerCssFile(
+  Yii::app()->baseUrl.'/css/style.css');
+$clientScript->registerScriptFile(
+  Yii::app()->baseUrl.'/js/scripts.js');
+// Register a script block
+$id='my_alert';
+$script="alert('test');";
+$position=CClientScript::POS_READY; // jQuery ready
+$clientScript->registerScript($id, $script, $position);
+```
+
+You can also use the Asset manager for publishing assets:  
+```php
+Yii::app()->getAssetManager()->publish(
+  Yii::getPathOfAlias('webroot')."/img/picture.jpg");
+```
+
+To minify/unify assets for performance you can either map them to a single using 
+Yii built in functionality or you can use a extension such as [minScript](http://www.yiiframework.com/extension/minscript).
+
 ]
 
 
