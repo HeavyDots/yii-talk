@@ -1127,7 +1127,40 @@ Now call it from somewhere in your app:
   ### - Log in
 ]
 .right-column[
-TBD
+
+```php
+public function actionLogin()
+{
+    $model=new LoginForm;
+    if(isset($_POST['LoginForm']))
+    {
+        $model->attributes=$_POST['LoginForm'];
+        if($model->validate() && $model->login())
+            $this->redirect(Yii::app()->user->returnUrl);
+    }
+    $this->render('login',array('model'=>$model));
+}
+// LoginForm.php uses components/UserIdentity.php
+public function login()
+{
+  if($this->_identity===null)
+  {
+      $this->_identity=new UserIdentity(
+        $this->username,
+        $this->password);
+      $this->_identity->authenticate();
+  }
+  if($this->_identity->errorCode===UserIdentity::ERROR_NONE)
+  {
+      $duration=$this->rememberMe ? 3600*24*30 : 0;
+      Yii::app()->user->login($this->_identity,$duration);
+      return true;
+  }
+  else
+      return false;
+}
+```
+
 ]
 
 
@@ -1138,7 +1171,29 @@ TBD
   ### - Get the user
 ]
 .right-column[
-TBD
+
+```php
+// Check if user is logged in
+var_dump(Yii::app()->user->isGuest);
+
+// Get current user id
+Yii::app()->user->id;
+
+// Set / get session state
+Yii::app()->user->setState("login_terms_accepted", true);
+Yii::app()->user->getState("login_terms_accepted");
+
+// Set / get session flash message
+Yii::app()->user->setFlash("contact", "Email sent!");
+if (Yii::app()->user->hasFlash("contact")) {
+  echo Yii::app()->user->getFlash("contact");
+}
+```
+
+User component can be extended by creating a `WebUser` component in `protected/components/WebUser.php` that extends `CWebUser` and change the config to start using it.
+
+You can also work directly with the `Yii::app()->session` managing the session data, for details look at [CHttpSession](http://www.yiiframework.com/doc/api/1.1/CHttpSession).
+
 ]
 
 
@@ -1183,7 +1238,36 @@ unset(Yii::app()->request->cookies['cookie_name']);
   ### - Access control &amp; RBAC
 ]
 .right-column[
-TBD
+
+```php
+// Inside controller
+public function filters() {
+  return array(
+    'accessControl', // perform access control
+  );
+}
+public function accessRules() {
+  return array(
+    array('allow',
+      // allow all logged user access contact action
+      'actions' => array('contact'),
+      'users' => array('@'),
+    ),
+    // allow role manager to access all the actions
+    array('allow',
+      'users' => array('@'),
+      'roles' => array("manager"),
+    ),
+    // deny access to rest of users
+    array('deny', 
+        'users' => array('*'),
+    ),
+  );
+}
+```
+
+Go ahead and learn more about the [Access Control Filter](http://www.yiiframework.com/doc/guide/1.1/en/topics.auth#access-control-filter) and the [Role-Based Access Control](http://www.yiiframework.com/doc/guide/1.1/en/topics.auth#role-based-access-control) system.
+
 ]
 
 
@@ -1197,7 +1281,11 @@ TBD
   ### - Security
 ]
 .right-column[
-TBD
+
+- Cross-site Scripting Prevention (CHtmlPurifier)
+- Cross-site Request Forgery Prevention (CSRF token)
+- Cookie Attack Prevention (enableCookieValidation)
+
 ]
 
 
@@ -1464,7 +1552,7 @@ More info on events in this [wiki](http://www.yiiframework.com/wiki/327/events-e
 ]
 .right-column[
 
-Yii comes with an prebuilt and automated way to create SOAP webservices.
+Yii comes with an prebuilt and automated way to create [SOAP webservices](http://www.yiiframework.com/doc/guide/1.1/en/topics.webservice).
 
 As for REST API, with some controllers, url routing and some imagination you can build a REST API in a few steps.
 
@@ -1482,7 +1570,9 @@ As for REST API, with some controllers, url routing and some imagination you can
 ]
 .right-column[
 
-Yii supports TDD, Unit Testing, and Functional testing. More on testing in the [guide](http://www.yiiframework.com/doc/guide/1.1/en/test.overview).
+Yii supports TDD, Unit Testing, and Functional testing. 
+
+More on testing in the [guide](http://www.yiiframework.com/doc/guide/1.1/en/test.overview).
 
 ]
 
