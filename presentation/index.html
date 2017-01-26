@@ -147,7 +147,7 @@ layout: false
 
 - Developing with Yii Framework 1  
 
-- Resources and good practices  
+- Some good practices  
 
 - Comparing Yii 1 with Yii 2  
 
@@ -1601,26 +1601,30 @@ Take a step further than Yii. Don't just use its widgets and tools, create custo
 
 ---
 class: center, middle
-## Resources and good practices
+## Some good practices
 
 ---
 .left-column[
-  ## Resources and good practices
-  ### - Resources
+  ## Some good practices
 ]
 .right-column[
-TBD
+
+- Set framework path inside a configuration file
+- Bigger application, use modules and better organization of files
+- For god sake, clean generated code! clean unused code!
+- Multiple bootstrap index.php files with different config
+- Local virtual hosts
+- Save private data / uploads in protected folder
+- Use config file for auth_tasks and rebuild it by command-line for RBAC
+- Extend Procedures Migrations if you DB uses migrations
+- Proper AJAX Requests and working with Urls and jQuery widgets
+- BAD! Don't use AR's search() metod to find sigle item, it's purpose is to be used in grids and lists
+- As general developer: Good IDE(NetBeans/Phpstorm), CVS(GIT), API & DOCS - RTFM!!
+- Read Yii's [conventions](http://www.yiiframework.com/doc/guide/1.1/en/basics.convention) too on how to organize and name stuff and [MVC best practices](http://www.yiiframework.com/doc/guide/1.1/en/basics.best-practices)
+
+
 ]
 
----
-.left-column[
-  ## Resources and good practices
-  ### - Resources
-  ### - Good practices
-]
-.right-column[
-TBD
-]
 
 ---
 name: comparing
@@ -1633,15 +1637,25 @@ class: center, middle
   ## Yii 1 vs Yii 2
 ]
 .right-column[
-TBD SLIDE 1
-]
 
----
-.left-column[
-  ## Yii 1 vs Yii 2
-]
-.right-column[
-TBD SLIDE 2
+What changes.. basically, more to do and also cool stuff but let's see:  
+
+- Use of composer
+- PHP 5.4
+- Namespaces / Use
+- Short arrays `[]`
+- Yii 1 was jQuery, Yii 2 is Bootstrap
+- Simple or advanced app structure
+- Advanced app basically is multi-app with common shared libraries
+- Index.php file now is in `web` public directory
+- In advanced multi-apps each one must have a VHOST, frontend, backend, api, etc
+- Environment files and more to configure
+- Goodies official extensions maintained by Yii core team, mongo, redis, swift, twig, among others
+- In View `$this` is a `Yii\web\view` object not a controller, to get the controller must do `$this->context`
+- Console apps commands are controllers now
+
+For more info see [Upgrading from Version 1.1](http://www.yiiframework.com/doc-2.0/guide-intro-upgrade-from-v1.html).
+
 ]
 
 ---
@@ -1654,7 +1668,22 @@ class: center, middle
   ### - Example projects
 ]
 .right-column[
-TBD
+
+Listing some projects that have been done by HeavyDots using Yii:
+
+Saas / CRM  
+
+https://nexocrm.com/ Yii 1 app, Yii 2 website
+
+Social networks
+
+http://mitibox.heavydots.com/ Yii 1
+http://branbee.heavydots.com/ Yii 1
+
+Websites  
+
+http://heavydots.com/ Yii 2
+
 ]
 
 ---
@@ -1664,7 +1693,36 @@ TBD
   ### - Links
 ]
 .right-column[
-TBD
+
+Guide &amp; API
+
+http://www.yiiframework.com/doc/guide/
+http://www.yiiframework.com/doc/api/
+
+Extensions, wiki and other tutorials
+
+http://www.yiiframework.com/extensions/
+http://www.yiiframework.com/demos/
+http://www.yiiframework.com/download/
+http://www.yiiframework.com/wiki/
+http://www.yiiframework.com/tutorials/
+http://www.yiiframework.com/doc/blog/
+
+Github
+
+https://github.com/yiisoft
+
+News
+
+http://yiifeed.com/
+
+Social networks
+
+https://www.facebook.com/groups/yiitalk/
+https://twitter.com/yiiframework
+
+
+
 ]
 
 
