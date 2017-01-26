@@ -147,7 +147,7 @@ layout: false
 
 - Developing with Yii Framework 1  
 
-- Resources and best practices  
+- Resources and good practices  
 
 - Comparing Yii 1 with Yii 2  
 
@@ -827,7 +827,27 @@ TBD
   ### - Cookies
 ]
 .right-column[
-TBD
+
+![Heavy Jelly eating a cookie](images/heavy-jelly-cookies.png)
+
+### HEAVY JELLY LOVES COOKIES
+
+```php
+// Read a cookie
+$value = '';
+if (isset(Yii::app()->request->cookies['cookie_name'])) {
+ $value = Yii::app()->request->cookies['cookie_name']->value;
+}
+
+// Write a cookie (IMPORTANT: Reload required)
+$cookie=new CHttpCookie('name', 'value', $options);
+Yii::app()->request->cookies['cookie_name'] = $cookie;
+
+// Deleting a cookie
+unset(Yii::app()->request->cookies['cookie_name']);
+
+```
+
 ]
 
 
@@ -1013,16 +1033,82 @@ Take a step further than Yii. Don't just use its widgets and tools, create custo
 
 ---
 class: center, middle
-## Resources and best practices
+## Resources and good practices
+
+---
+.left-column[
+  ## Resources and good practices
+  ### - Resources
+]
+.right-column[
+TBD
+]
+
+---
+.left-column[
+  ## Resources and good practices
+  ### - Resources
+  ### - Good practices
+]
+.right-column[
+TBD
+]
 
 ---
 name: comparing
 class: center, middle
 ## Comparing Yii 1 with Yii 2
 
+
+---
+.left-column[
+  ## Yii 1 vs Yii 2
+]
+.right-column[
+TBD SLIDE 1
+]
+
+---
+.left-column[
+  ## Yii 1 vs Yii 2
+]
+.right-column[
+TBD SLIDE 2
+]
+
 ---
 class: center, middle
 ## Final conclusions
+
+---
+.left-column[
+  ## Final conclusions
+  ### - Example projects
+]
+.right-column[
+TBD
+]
+
+---
+.left-column[
+  ## Final conclusions
+  ### - Example projects
+  ### - Links
+]
+.right-column[
+TBD
+]
+
+---
+.left-column[
+  ## Final conclusions
+  ### - Example projects
+  ### - Links
+  ### - Last word
+]
+.right-column[
+TBD
+]
 
 ---
 class: center, middle
