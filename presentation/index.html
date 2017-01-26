@@ -1262,7 +1262,15 @@ TBD
   ### - Helpers
 ]
 .right-column[
-TBD
+
+Helper classes: 
+
+- in views we often need some code snippets to do tiny tasks such as formatting data or generating HTML tags
+- place all of these code snippets in a view helper class
+- use the helper class in your view files
+- Yii has a powerful [CHtml](http://www.yiiframework.com/doc/api/1.1/CHtml) helper that is used a lot in forms and not only
+- other interesting helpers to use from any part of the application are [CJSON](http://www.yiiframework.com/doc/api/1.1/CJSON) and [CJavaScript](http://www.yiiframework.com/doc/api/1.1/CJavaScript) that allow you for example to manage json and/or escape javascript data
+
 ]
 
 ---
@@ -1272,7 +1280,34 @@ TBD
   ### - Components
 ]
 .right-column[
-TBD
+
+Yii comes with a lot of default components attached to the application but you 
+can also create new ones, either to extend current ones or to create your own.
+
+```php
+// File: protected/components/SMSComponent.php
+class SMSComponent extends CComponent
+{
+    public $my_phone;
+ 
+    public function sendSMS($to)
+    {
+      ...
+    }
+}
+// Configure the app to load it
+// application components
+'components'=>array(
+  'sms'=>array(
+    'class' => 'application.components.SMSComponent',
+    'my_phone' => 123456,
+  ),
+)
+// Use the component from anywhere
+$to=5554444;
+Yii:app()->sms->sendSMS($to);
+```
+
 ]
 
 ---
@@ -1283,7 +1318,15 @@ TBD
   ### - Behavior
 ]
 .right-column[
-TBD
+
+Behaviors can be used for some of the following reasons:  
+
+- Allow possibility of a class to extend multiple classes methods, basically creating a Behavior with 2 methods and attaching it to an object, that object will have the 2 methods too
+- Other reason is to be able to make an object behave as you want, and reutilize that, for example:
+  - [Timestamp](http://www.yiiframework.com/doc/api/1.1/CTimestampBehavior) behavior
+  - Slug behavior
+  - Etc
+
 ]
 
 ---
@@ -1295,7 +1338,11 @@ TBD
   ### - Events
 ]
 .right-column[
-TBD
+
+What is an event? It is the fact that we want to express that in certain points in our source code something happens!
+
+More info on events in this [wiki](http://www.yiiframework.com/wiki/327/events-explained/) and in the [guide](http://www.yiiframework.com/doc/guide/1.1/en/basics.component#component-event).
+
 ]
 
 ---
@@ -1308,7 +1355,11 @@ TBD
   ### - Webservices and APIs
 ]
 .right-column[
-TBD
+
+Yii comes with an prebuilt and automated way to create SOAP webservices.
+
+As for REST API, with some controllers, url routing and some imagination you can build a REST API in a few steps.
+
 ]
 
 ---
@@ -1322,7 +1373,9 @@ TBD
   ### - Testing
 ]
 .right-column[
-TBD
+
+Yii supports TDD, Unit Testing, and Functional testing. More on testing in the [guide](http://www.yiiframework.com/doc/guide/1.1/en/test.overview).
+
 ]
 
 ---
