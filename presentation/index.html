@@ -1242,7 +1242,16 @@ Yii::log($msg,$level=CLogger::LEVEL_INFO,$category);
   ### - Performance Tuning
 ]
 .right-column[
-TBD
+
+The following check list should be followed in order to improve the performance of the application:  
+
+- Enabling APC Extension
+- Disabling Debug Mode
+- Using yiilite.php
+- Using Caching Techniques
+- Database Optimization
+- Minimizing Script Files and Symlinking assets
+
 ]
 
 
@@ -1253,7 +1262,33 @@ TBD
   ### - Caching
 ]
 .right-column[
-TBD
+
+Yii supports multiple ways of caching data and multiple caching technologies.
+
+- You can cache Data, Fragment (views), full pages, and also dynamic caching, cache dependencies
+- You can use simple file cache, apc, mem, xcache, db cache and many more
+
+Simply configure the cache component of your application and start [using it](http://www.yiiframework.com/doc/guide/1.1/en/caching.overview).
+
+```php
+// Config
+array(
+  'components'=>array(
+    'cache'=>array(
+      'class'=>'system.caching.CFileCache',
+    ),
+  ),
+);
+// Use
+$value=Yii::app()->cache->get($id);
+if($value===false)
+{
+    // regenerate $value because it is not found in cache
+    // and save it in cache for later use:
+    // Yii::app()->cache->set($id,$value);
+}
+```
+
 ]
 
 ---
