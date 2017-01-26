@@ -905,7 +905,25 @@ Yii built in functionality or you can use a extension such as [minScript](http:/
   ### - Setup
 ]
 .right-column[
-TBD
+
+First create your database tables from your favorite app. PhpMyAdmin, Toad, HeidiSQL.
+
+Then configure the application to use your DB:
+
+```php
+// File: protected/config/database.php
+// This is the database connection configuration.
+return array(
+  'connectionString' => 'mysql:host=localhost;dbname=test',
+  'emulatePrepare' => true,
+  'username' => 'root',
+  'password' => '',
+  'charset' => 'utf8'
+);
+```
+
+Now you could generate all the AR models with Gii code generation tool, but we'll see that later!
+
 ]
 
 
@@ -916,7 +934,29 @@ TBD
   ### - ActiveRecord
 ]
 .right-column[
-TBD
+
+```php
+// Create
+$post=new Post;
+$post->title='sample post';
+$post->content='post body content';
+$post->save();
+// find the first row satisfying the specified condition
+$post=Post::model()->find($condition,$params);
+// find the row with the specified primary key
+$post=Post::model()->findByPk($postID,$condition,$params);
+// find the row with the specified attribute values
+$post=Post::model()->findByAttributes($attributes);
+// find the first row using the specified SQL statement
+$post=Post::model()->findBySql($sql,$params);
+// find all rows satisfying the specified condition
+$posts=Post::model()->findAll($condition,$params);
+// assuming there is a post whose ID is 10
+$post=Post::model()->findByPk(10); 
+// delete the row from the database table
+$post->delete(); 
+```
+
 ]
 
 
@@ -928,7 +968,22 @@ TBD
   ### - DataProvider, Sort, paginate
 ]
 .right-column[
-TBD
+
+```php
+$criteria = new CDbCriteria;
+
+$criteria->compare('id', $this->id);
+$criteria->compare('date_add', $this->date_add, true);
+$criteria->compare('date_upd', $this->date_upd, true);
+
+return new CActiveDataProvider('User', array(
+  'criteria' => $criteria,
+));
+```
+
+CActiveDataProvider comes already with [Pagination](http://www.yiiframework.com/doc/api/1.1/CPagination) and [Sort](http://www.yiiframework.com/doc/api/1.1/CSort) but you can use those 
+components individually from a controller.
+
 ]
 
 
@@ -941,7 +996,20 @@ TBD
   ### - DAO/SQL
 ]
 .right-column[
-TBD
+
+```php
+$connection=Yii::app()->db;   // assuming you have configured a "db" connection
+$sql="SELECT * FROM USERS";
+$command=$connection->createCommand($sql);
+
+$rowCount=$command->execute();   // execute the non-query SQL
+$dataReader=$command->query();   // execute a query SQL
+$rows=$command->queryAll();      // query and return all rows of result
+$row=$command->queryRow();       // query and return the first row of result
+$column=$command->queryColumn(); // query and return the first column of result
+$value=$command->queryScalar();  // query and return the first field in the first row
+```
+
 ]
 
 
@@ -955,7 +1023,10 @@ TBD
   ### - Good practices
 ]
 .right-column[
-TBD
+
+Always work in such way that you bind parameters and never allow direct user input data to 
+be used in a SQL call, this way you prevent SQL injections.
+
 ]
 
 
@@ -970,7 +1041,10 @@ TBD
   ### - Migrations
 ]
 .right-column[
-TBD
+
+- Use `yiic migrate` command line tool to create migration files or to apply new migrations
+- Migrations can be written either in plain SQL or OOP
+
 ]
 
 ---
@@ -979,7 +1053,32 @@ TBD
   ### - FormModel &amp; ActiveRecord
 ]
 .right-column[
-TBD
+
+Both FormModel and ActiveModel extend from a parent Model class so they work in a very similar way.
+
+```php
+// FormModel
+class ContactForm extends CFormModel
+{
+  public $name;
+  ... 
+  public function rules()
+  {
+    ...
+  }
+  public function attributeLabels()
+  {
+    ...
+  }
+}
+// ActiveRecord
+class ApiKey extends CActiveRecord {
+  public function tableName() {
+    return 'api_key';
+  }
+}
+```
+
 ]
 
 
@@ -990,7 +1089,28 @@ TBD
   ### - Validating data
 ]
 .right-column[
-TBD
+
+```php
+// File: ContactForm.php
+// Define validation rules of the model.
+public function rules()
+{
+  return array(
+    array('name, email, subject, body', 'required'),
+    array('email', 'email'),
+    ...
+  );
+}
+```
+
+See here all the available [validators](http://www.yiiframework.com/doc/guide/1.1/en/form.model#declaring-validation-rules).
+
+Not validated fields must have a `safe` validation rule.
+
+New custom validator can be easily created as a method inside the model and use use it in the rules.
+
+Rules can also apply only to certain validation scenario, by using `on`.
+
 ]
 
 
@@ -1002,7 +1122,33 @@ TBD
   ### - View of the form
 ]
 .right-column[
-TBD
+
+```php
+<?php $form=$this->beginWidget('CActiveForm', array(
+	'id'=>'contact-form',
+	'enableClientValidation'=>true,
+	'clientOptions'=>array(
+		'validateOnSubmit'=>true,
+	),
+)); ?>
+	<?php echo $form->errorSummary($model); ?>
+	<div class="row">
+		<?php echo $form->labelEx($model,'name'); ?>
+		<?php echo $form->textField($model,'name'); ?>
+		<?php echo $form->error($model,'name'); ?>
+	</div>
+	<div class="row">
+		<?php echo $form->labelEx($model,'email'); ?>
+		<?php echo $form->textField($model,'email'); ?>
+		<?php echo $form->error($model,'email'); ?>
+	</div>
+	<!-- rest of fields -->
+	<div class="row buttons">
+		<?php echo CHtml::submitButton('Submit'); ?>
+	</div>
+<?php $this->endWidget(); ?>
+```
+
 ]
 
 
@@ -1015,7 +1161,28 @@ TBD
   ### - Processing form
 ]
 .right-column[
-TBD
+
+```php
+public function actionContact()
+{
+  $model=new ContactForm;
+  if(isset($_POST['ContactForm']))
+  {
+    $model->attributes=$_POST['ContactForm'];
+    if($model->validate())
+    {
+      
+      ... send mail here ..
+      
+      Yii::app()->user->setFlash('contact',
+        'Thank you for contacting us.');
+      $this->refresh();
+    }
+  }
+  $this->render('contact',array('model'=>$model));
+}
+```
+
 ]
 
 ---
