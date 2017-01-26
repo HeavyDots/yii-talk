@@ -506,7 +506,28 @@ We'll see more thoughts on this in the final part: [Comparing Yii 1 with Yii 2](
   ### - Creating a new project
 ]
 .right-column[
-TBD
+
+To create a new project you have to use the `yiic webapp` command from the framework folder.
+
+```
+USAGE
+  yiic webapp <app-path> [<vcs>]
+
+DESCRIPTION
+  This command generates an Yii Web Application 
+  at the specified location.
+  
+- app-path: required, the directory for the new app
+- vcs: optional, version control system you're going to use
+```
+
+For example:   
+
+```
+cd /path/to/yii-1.1.16.bca042/framework/
+yiic webapp /path/to/my/new/app git
+```
+
 ]
 
 
@@ -517,7 +538,31 @@ TBD
   ### - Directory structure
 ]
 .right-column[
-TBD
+```
+index.php       Web application entry script file
+index-test.php  entry script file for the functional tests
+assets/         published resource files
+css/            CSS files
+images/         image files
+themes/         application themes
+protected/      protected application files
+  yiic          yiic command line script for Unix/Linux
+  yiic.bat      yiic command line script for Windows
+  yiic.php      yiic command line PHP script
+  commands/     customized 'yiic' commands
+  components/   reusable user components
+  config/       configuration files
+  controllers/  controller class files
+  data/         the sample database
+  extensions/   third-party extensions
+  messages/     translated messages
+  models/       model class files
+  runtime/      temporarily generated files
+  tests/        test scripts
+  views/        controller view and layout files
+	 layouts/   layout view files
+	 site/      view files for the 'site' controller
+```
 ]
 
 
@@ -529,7 +574,26 @@ TBD
   ### - Modules
 ]
 .right-column[
-TBD
+## What's a Module?  
+
+- self-contained software unit that consists of models, views, controllers and other supporting components
+- must reside inside of an application
+- for a large-scale application, we may divide it into several modules
+- commonly used features, may be developed in terms of modules so that they can be reused
+
+## How to use Modules?
+
+Faster way to create one is with [Gii](http://www.yiiframework.com/doc/guide/1.1/en/topics.gii) code generation tool.
+Once created simply add it to your config file:  
+
+```
+return array(
+    ......
+    'modules'=>array('my_new_module',...),
+    ......
+);
+```
+
 ]
 
 
@@ -542,7 +606,41 @@ TBD
   ### - Config &amp; autoload
 ]
 .right-column[
-TBD
+
+Based on arrays. Initial config files after creating app:
+
+```
+console.php     console applications use separate config file
+database.php    the database configuration
+main.php        the main configuration file
+test.php        the configuration for the functional tests
+```
+
+Basically you can put almost all the configurations in the `main.php` but often good practices are to:  
+
+- Split into multiple configuration files for better management. Example including separate config file from `main.php`:  
+
+```
+'db'=>require(dirname(__FILE__).'/database.php'),
+```
+
+- Reutilize between console and web apps.
+- Create custom config files excluded from version control that will allow each environment different configurations.
+- Merge configuration files:  
+
+```
+if (file_exists(dirname(__FILE__) . '/custom.params.php')) {
+  $params = CMap::mergeArray($params, require(dirname(__FILE__) . '/custom.params.php'));
+}
+....
+'params' => $params,
+```
+
+
+
+
+Learn more details about everything that can be configured in [this wiki](http://www.yiiframework.com/wiki/59/).
+
 ]
 
 ---
